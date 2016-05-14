@@ -1,0 +1,414 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+   
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/custom.css" rel="stylesheet">
+<script src="//ajax.googleapis.com/ajax/libs/dojo/1.6.3/dojo/dojo.xd.js" data-dojo-config="isDebug: true,parseOnLoad: true"></script>
+		<script>
+		// Require the basic 2d chart resource: Chart2D
+			dojo.require("dojox.charting.Chart2D");
+
+			// Require the theme of our choosing
+			//"Claro", new in Dojo 1.6, will be used
+			dojo.require("dojox.charting.themes.Claro");
+			
+		/*	// Grab the parser
+			dojo.require("dojo.parser");
+			
+			// Require the basic 2d chart resource: Chart2D
+			dojo.require("dojox.charting.widget.Chart2D");
+			
+			dojo.require("dojox.charting.action2d.Highlight");
+			dojo.require("dojox.charting.action2d.MoveSlice");
+			dojo.require("dojox.charting.action2d.Tooltip");
+
+			// Require the theme of our choosing
+			//"Claro", new in Dojo 1.6, will be used
+			dojo.require("dojox.charting.themes.Claro");
+			
+			// x and y coordinates used for easy understanding of where they should display
+			// Data represents website visits over a week period
+			chartData = [
+				{  y: "700" ,text:"migrated Out - 700",fontSize:"30px"},
+				{  y: "500" ,text:"migrated in - 500",fontSize:"30px"},
+			];
+		*/
+		</script>
+	   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script>
+    <script type='text/javascript'>
+  //google.load("visualization", "1", {packages: ["geomap",'table']});
+   google.charts.load('current', {'packages': ['geomap']});
+
+	</script>
+  </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid col-xs-12 col-md-4">
+        <h3 class="navbar-brand ">Share Market - Admin
+        </h3>  
+      </div>
+	 
+    </nav>
+
+    <div class="container marginTop col-xs-12 col-md-offset-3 col-md-6 pull-left">
+      <div id="errDiv" class="col-xs-12 container noDisplay label label-error">
+      </div>
+       
+		<ul class="nav nav-tabs nav-justified marginTopTab">
+	
+		  <li class="active"><a data-toggle="tab" href="#view">Search</a></li>
+		  
+		  <li><a data-toggle="tab" href="#modify">Modify</a></li>
+		   <li><a data-toggle="tab" href="#delete">Delete</a></li>
+		  
+		</ul>
+ 
+      <div id="resultDiv" class="col-xs-offset-1 pull-left noDisplay  label-success">
+      </div>
+
+    </div>
+	<div class="tab-content">
+	 <div id="view" class="col-xs-offset-2 col-md-offset-2 col-md-8 tab-pane fade in active">
+	         <h3>Search a particular user</h3>
+
+      <div class="form-group col-md-offset-2 col-xs-10">
+        <label for="name">Enter name</label>
+     
+	
+      </div>
+	<div class="form-group col-xs-12 col-md-offset-2 col-md-6 ">
+	
+	  <input type="text" class="form-control" id="usr">
+	</div>
+     
+      <div class="form-group col-md-offset-4 col-xs-12">
+       <button type="button" class="prescreen-button btn btn-success btn-lg " id="inoutbtn">Search
+       </button>
+      </div>
+	  <div class="col-xs-offset-2 col-xs-10">
+	<!--<div dojoType="dojox.charting.widget.Chart2D" theme="dojox.charting.themes.Claro" id="viewsChart" style="width: 550px; height: 550px;">
+
+		
+			<div class="plot" name="default" type="Pie" radius="200" fontColor="#000"  labelOffset="-20" labelStyle= "columns" ></div>
+
+			
+			<div id="pieData" class="series" name="Last Week's Visits" ></div> 
+
+		</div> -->
+		<div id="chartNode" style="width: 550px; height: 550px;"></div>
+		</div>
+	  </div>
+	
+	<div id="modify" class="col-xs-offset-2 col-md-offset-2 col-md-8 tab-pane fade ">
+	 <h3 id="HeadingForState" >Modify user details(needs access-code) or use table below</h3>
+
+	 <div class="form-group col-md-offset-2 col-xs-10">
+        <label for="name">Search specific user to modify</label>
+     
+	
+      </div>
+	<div class="form-group col-xs-12 col-md-offset-2 col-md-6 ">
+	
+	  <input type="text" class="form-control" id="usr">
+	</div>
+     
+      <div class="form-group col-md-offset-4 col-xs-12">
+       <button type="button" class="prescreen-button btn btn-success btn-lg " id="inoutbtn">Filter
+       </button>
+      </div>
+	 
+	 
+      <div class="col-xs-offset-2 col-xs-10" id="map_canvas">
+	  
+	</div>
+	</div>
+	<div id="delete" class="col-xs-offset-2 col-md-offset-2 col-md-8 tab-pane fade ">
+	<h3>Block a user </h3>
+	<h5> Use list below or search using the searchbox </h5>
+	  
+	    <div class="form-group col-md-offset-2 col-xs-10">
+        <label for="name">search user</label>
+     
+	
+      </div>
+	<div class="form-group col-xs-12 col-md-offset-2 col-md-6 ">
+	
+	  <input type="text" class="form-control" id="usr">
+	</div>
+     
+      <div class="form-group col-md-offset-4 col-xs-12">
+       <button type="button" class="prescreen-button btn btn-success btn-lg " id="inoutbtn">Search
+       </button>
+      </div>
+	<div class="col-xs-offset-2 col-xs-10" id="least_canvas">
+	  
+	</div>
+	
+	</div>
+	</div>
+    <!-- jQuery CDN -->
+<script   src="https://code.jquery.com/jquery-2.2.3.min.js"   integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
+    <!-- Underscore js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+  
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+ 
+    <!--custom JS -->
+	<script>
+	
+	// When the DOM is ready and resources are loaded...
+			dojo.ready(function() {
+				flagForInOut = false;
+		$("#inoutbtn").click(function(){
+		var year = $('#yearinout :selected').val();
+		var state = $('#stateinout :selected').val();
+		state = state.toUpperCase();
+		
+			/*'query=PREFIX d1149: <http://data-gov.tw.rpi.edu/raw/1149/data-1149-> '+
+			'PREFIX d1148: <http://data-gov.tw.rpi.edu/raw/1148/data-1148-> '+
+			'PREFIX dataURI:	<http://data-gov.tw.rpi.edu/vocab/p/1146/> '+
+			'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> '+
+			'SELECT (SUM(xsd:integer(?in_exempt_num)) as ?in_exempt_sum) (SUM(xsd:integer(?return_num)) as ?in_return_sum) '+
+			'WHERE { ?subject dataURI:state_name '+'"'+state+'". ?subject dataURI:years '+'"'+year+'" . ?subject dataURI:state_code_dest ?state1 . '+
+			'FILTER(STRSTARTS(STR(?subject), "http://data-gov.tw.rpi.edu/raw/1148/data-1148-")). '+
+			'?subject dataURI:exmpt_num ?in_exempt_num . '+
+			'?subject dataURI:return_num ?return_num }"' */
+						
+			var queryForInflow = 'query=PREFIX+d1149%3A+%3Chttp%3A%2F%2Fdata-gov.tw.rpi.edu%2Fraw%2F1149%2Fdata-1149-%3E+PREFIX+d1148%3A+%3Chttp%3A%2F%2Fdata-gov.tw.rpi.edu%2Fraw%2F1148%2Fdata-1148-%3E+PREFIX+dataURI%3A%09%3Chttp%3A%2F%2Fdata-gov.tw.rpi.edu%2Fvocab%2Fp%2F1146%2F%3E+PREFIX+xsd%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema%23%3E+SELECT+(SUM(xsd%3Ainteger(%3Fin_exempt_num))+as+%3Fin_exempt_sum)+(SUM(xsd%3Ainteger(%3Freturn_num))+as+%3Fin_return_sum)+WHERE+%7B+%3Fsubject+dataURI%3Astate_name+%22'+state+'%22.+%3Fsubject+dataURI%3Ayears+%22'+year+'%22+.+%3Fsubject+dataURI%3Astate_code_dest+%3Fstate1+.+FILTER(STRSTARTS(STR(%3Fsubject)%2C+%22http%3A%2F%2Fdata-gov.tw.rpi.edu%2Fraw%2F1148%2Fdata-1148-%22)).+%3Fsubject+dataURI%3Aexmpt_num+%3Fin_exempt_num+.+%3Fsubject+dataURI%3Areturn_num+%3Freturn_num+%7D'
+			var queryForOutFlow = 'query=PREFIX+d1149%3A+%3Chttp%3A%2F%2Fdata-gov.tw.rpi.edu%2Fraw%2F1149%2Fdata-1149-%3E+PREFIX+d1148%3A+%3Chttp%3A%2F%2Fdata-gov.tw.rpi.edu%2Fraw%2F1148%2Fdata-1148-%3E+PREFIX+dataURI%3A%09%3Chttp%3A%2F%2Fdata-gov.tw.rpi.edu%2Fvocab%2Fp%2F1146%2F%3E+PREFIX+xsd%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema%23%3E+SELECT+(SUM(xsd%3Ainteger(%3Fexempt_num))+as+%3Fout_exempt_sum)+(SUM(xsd%3Ainteger(%3Freturn_num))+as+%3Fout_return_sum)+WHERE+%7B+%3Fsubject+dataURI%3Astate_name+%22'+state+'%22.+%3Fsubject+dataURI%3Ayears+%22'+year+'%22+.+%3Fsubject+dataURI%3Astate_code_dest+%3Fstate1+.+FILTER(STRSTARTS(STR(%3Fsubject)%2C+%22http%3A%2F%2Fdata-gov.tw.rpi.edu%2Fraw%2F1149%2Fdata-1149-%22)).+%3Fsubject+dataURI%3Aexmpt_num+%3Fexempt_num+.+%3Fsubject+dataURI%3Areturn_num+%3Freturn_num+%7D'
+			//$("#pieData").removeAttr("array");
+			//alert(query);
+			//var encodedQuery = encodeURI(query);
+			//console.log(encodedQuery);
+			var responseForInstate = [];
+			$.ajax({
+				async:false,
+				contentType:'application/x-www-form-urlencoded',
+				type:'GET',
+				dataType:'json',
+				url: "http://localhost:3030/myDataset/query", 
+				data:queryForInflow,
+				//Postman-Token: '28a07162-5471-bd78-c485-e9313bf854ff',
+				success: function(result){
+				//alert("In here");
+				console.log(result.results.bindings[0].in_exempt_sum.value);
+				console.log(result.results.bindings[0].in_return_sum.value);
+				//total 
+				responseForInstate.push(result.results.bindings[0].in_exempt_sum.value);
+				//returns filed
+				responseForInstate.push(result.results.bindings[0].in_return_sum.value);
+				
+			}});
+			$.ajax({
+				async:false,
+				contentType:'application/x-www-form-urlencoded',
+				type:'GET',
+				dataType:'json',
+				url: "http://localhost:3030/myDataset/query", 
+				data:queryForOutFlow,
+				success: function(result){
+				//alert("In here");
+				console.log(result.results.bindings[0].out_exempt_sum.value);
+				console.log(result.results.bindings[0].out_return_sum.value);
+				//total filed as exempt in another state 
+				responseForInstate.push(result.results.bindings[0].out_exempt_sum.value);
+				//returns filed from another state
+				responseForInstate.push(result.results.bindings[0].out_return_sum.value);
+				console.log(responseForInstate);
+				 migratedOut = parseInt(responseForInstate[0])-parseInt(responseForInstate[3]);
+				 migratedIn = parseInt(responseForInstate[2])-parseInt(responseForInstate[1]);
+		
+		
+			// x and y coordinates used for easy understanding of where they should display
+			// Data represents website visits over a week period
+			//chartData =[];
+			chartData = [
+				{  y: migratedOut ,text:"migrated Out - "+migratedOut,fontSize:"30px"},
+				{  y: migratedIn ,text:"migrated in - "+migratedIn,fontSize:"30px"},
+			];
+			//$("#pieData").attr("array","chartData");
+			
+				// Add the series of data
+				if(!flagForInOut){
+				flagForInOut = true;
+				 pieChart = new dojox.charting.Chart2D("chartNode");
+				 
+				// Set the theme
+				pieChart.setTheme(dojox.charting.themes.Claro);
+				 
+				// Add the only/default plot
+				pieChart.addPlot("default", {
+				type: "Pie",
+				radius: 200,
+				fontColor: "black",
+				labelOffset: "-40",
+				});
+				 
+				pieChart.addSeries("Series1",chartData);
+				}else{
+				
+				pieChart.updateSeries("Series1", chartData);
+				}
+				
+				
+                          
+				// Render the chart!
+				pieChart.render();
+				 
+					
+			}});
+		});
+		
+		$("#statetostatebtn").click(function(){
+		
+		
+		
+		var year = $('#stateyear :selected').val();
+		var state1 = $('#fromstate :selected').val();
+		var state2 = $('#tostate :selected').val();
+		var state1name = $('#fromstate :selected').text();
+		var state2name = $('#tostate :selected').text();
+		
+
+						
+			var outOfState1 = 'query=PREFIX+d1149%3A+%3Chttp%3A%2F%2Fdata-gov.tw.rpi.edu%2Fraw%2F1149%2Fdata-1149-%3E+PREFIX+d1148%3A+%3Chttp%3A%2F%2Fdata-gov.tw.rpi.edu%2Fraw%2F1148%2Fdata-1148-%3E+PREFIX+dataURI%3A%09%3Chttp%3A%2F%2Fdata-gov.tw.rpi.edu%2Fvocab%2Fp%2F1146%2F%3E+PREFIX+xsd%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema%23%3E+SELECT+(SUM(xsd%3Ainteger(%3Fexempt_num))+as+%3Fin_exempt_sum)+(SUM(xsd%3Ainteger(%3Freturn_num))+as+%3Fin_return_sum)+WHERE+%7B+%3Fsubject+dataURI%3Astate_code_origin+%22'+state1+'%22.+%3Fsubject+dataURI%3Ayears+%22'+year+'%22+.+%3Fsubject+dataURI%3Astate_code_dest+%22'+state2+'%22+.+FILTER(STRSTARTS(STR(%3Fsubject)%2C+%22http%3A%2F%2Fdata-gov.tw.rpi.edu%2Fraw%2F1148%2Fdata-1148-%22)).+%3Fsubject+dataURI%3Aexmpt_num+%3Fexempt_num+.+%3Fsubject+dataURI%3Areturn_num+%3Freturn_num+%7D'
+			var outOfState2 = 'query=PREFIX+d1149%3A+%3Chttp%3A%2F%2Fdata-gov.tw.rpi.edu%2Fraw%2F1149%2Fdata-1149-%3E+PREFIX+d1148%3A+%3Chttp%3A%2F%2Fdata-gov.tw.rpi.edu%2Fraw%2F1148%2Fdata-1148-%3E+PREFIX+dataURI%3A%09%3Chttp%3A%2F%2Fdata-gov.tw.rpi.edu%2Fvocab%2Fp%2F1146%2F%3E+PREFIX+xsd%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema%23%3E+SELECT+(SUM(xsd%3Ainteger(%3Fexempt_num))+as+%3Fin_exempt_sum)+(SUM(xsd%3Ainteger(%3Freturn_num))+as+%3Fin_return_sum)+WHERE+%7B+%3Fsubject+dataURI%3Astate_code_origin+%22'+state2+'%22.+%3Fsubject+dataURI%3Ayears+%22'+year+'%22+.+%3Fsubject+dataURI%3Astate_code_dest+%22'+state1+'%22+.+FILTER(STRSTARTS(STR(%3Fsubject)%2C+%22http%3A%2F%2Fdata-gov.tw.rpi.edu%2Fraw%2F1148%2Fdata-1148-%22)).+%3Fsubject+dataURI%3Aexmpt_num+%3Fexempt_num+.+%3Fsubject+dataURI%3Areturn_num+%3Freturn_num+%7D'
+			//$("#pieData").removeAttr("array");
+			//alert(query);
+			//var encodedQuery = encodeURI(query);
+			//console.log(encodedQuery);
+			var responseForInstate = [];
+			$.ajax({
+				async:false,
+				contentType:'application/x-www-form-urlencoded',
+				type:'GET',
+				dataType:'json',
+				url: "http://localhost:3030/myDataset/query", 
+				data:outOfState1,
+				//Postman-Token: '28a07162-5471-bd78-c485-e9313bf854ff',
+				success: function(result){
+				//alert("In here");
+				//console.log(result.results.bindings[0].in_exempt_sum.value);
+				//console.log(result.results.bindings[0].in_return_sum.value);
+				//total 
+				//responseForInstate.push(result.results.bindings[0].in_exempt_sum.value);
+				//returns filed
+				responseForInstate.push(result.results.bindings[0].in_return_sum.value);
+				
+			}});
+			$.ajax({
+				async:false,
+				contentType:'application/x-www-form-urlencoded',
+				type:'GET',
+				dataType:'json',
+				url: "http://localhost:3030/myDataset/query", 
+				data:outOfState2,
+				success: function(result){
+				//alert("In here");
+				//console.log(result.results.bindings[0].out_exempt_sum.value);
+				//console.log(result.results.bindings[0].out_return_sum.value);
+				//total filed as exempt in another state 
+				//responseForInstate.push(result.results.bindings[0].out_exempt_sum.value);
+				//returns filed from another state
+				responseForInstate.push(result.results.bindings[0].in_return_sum.value);
+				console.log(responseForInstate);
+				$("#HeadingForState").text("Migration from "+state1name+" to "+state2name+" and vice versa.")
+			  google.charts.setOnLoadCallback(drawMap);
+
+					function drawMap() {
+					
+					  var data = google.visualization.arrayToDataTable([
+						['State', 'Migration count'],
+						[state1name, responseForInstate[0]],
+						[state2name, responseForInstate[1]],
+					  
+					  ]);
+
+					  var options = {};
+					  options['region'] = 'US';
+					  options['colors'] = [0xFF8747, 0xFFB581, 0xc06000]; //orange colors
+					  options['dataMode'] = 'markers';
+
+					  var container = document.getElementById('map_canvas');
+					  var geomap = new google.visualization.GeoMap(container);
+					  geomap.draw(data, options);
+					};
+				 
+					
+			}});
+				 
+				
+			});
+	});
+
+$( "#staticyear" ).change(function() {
+  var year = $("#staticyear :selected").val();
+ 
+	var queryforstatic = 'query=PREFIX+d1149%3A+%3Chttp%3A%2F%2Fdata-gov.tw.rpi.edu%2Fraw%2F1149%2Fdata-1149-%3E+PREFIX+d1148%3A+%3Chttp%3A%2F%2Fdata-gov.tw.rpi.edu%2Fraw%2F1148%2Fdata-1148-%3E+PREFIX+dataURI%3A%09%3Chttp%3A%2F%2Fdata-gov.tw.rpi.edu%2Fvocab%2Fp%2F1146%2F%3E+PREFIX+xsd%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema%23%3E+SELECT+(SUM(xsd%3Ainteger(%3Fexempt_num))+as+%3Fin_exempt_sum)+(SUM(xsd%3Ainteger(%3Freturn_num))+as+%3Fin_return_sum)+%3Fstate+WHERE+%7B+%3Fsubject+dataURI%3Astate_name+%3Fstate.+%3Fsubject+dataURI%3Ayears+%22'+year+'%22+.+%3Fsubject+dataURI%3Astate_code_dest+%3Fstate1+.+FILTER(STRSTARTS(STR(%3Fsubject)%2C+%22http%3A%2F%2Fdata-gov.tw.rpi.edu%2Fraw%2F1148%2Fdata-1148-%22)).+%3Fsubject+dataURI%3Aexmpt_num+%3Fexempt_num+.+%3Fsubject+dataURI%3Areturn_num+%3Freturn_num+%7D+group+by+%3Fstate++order+by+%3Fin_return_sum+LIMIT+10'
+	var responseForStatic = [];
+	var stateForStatic =[];
+	$.ajax({
+				async:false,
+				contentType:'application/x-www-form-urlencoded',
+				type:'GET',
+				dataType:'json',
+				url: "http://localhost:3030/myDataset/query", 
+				data:queryforstatic,
+				success: function(result){
+				for(var i=0;i<result.results.bindings.length;i++){
+				responseForStatic.push(result.results.bindings[i].in_return_sum.value);
+				stateForStatic.push(result.results.bindings[i].state.value.split(" ")[0]);
+				
+				}
+				
+				console.log(responseForStatic);
+				console.log(stateForStatic);
+				//$("#HeadingForState").text("Migration from "+state1name+" to "+state2name+" and vice versa.")
+			  google.charts.setOnLoadCallback(drawMap);
+
+					function drawMap() {
+					
+					  var data = google.visualization.arrayToDataTable([
+						['State', 'Migration count'],
+						[stateForStatic[0], responseForStatic[0]],
+						[stateForStatic[1], responseForStatic[1]],
+						[stateForStatic[2], responseForStatic[2]],
+						[stateForStatic[3], responseForStatic[3]],
+						[stateForStatic[4], responseForStatic[4]],
+						[stateForStatic[5], responseForStatic[5]],
+						[stateForStatic[6], responseForStatic[6]],
+						[stateForStatic[7], responseForStatic[7]],
+						[stateForStatic[8], responseForStatic[8]],
+						[stateForStatic[9], responseForStatic[9]],
+						
+					  ]);
+					
+					  var options = {};
+					  options['region'] = 'US';
+					  options['colors'] = [0xFF8747, 0xFFB581, 0xc06000]; //orange colors
+					  options['dataMode'] = 'markers';
+
+					  var container = document.getElementById('least_canvas');
+					  var geomap = new google.visualization.GeoMap(container);
+					  geomap.draw(data, options);
+					};
+				 
+					
+			}});
+});
+	
+				 
+	</script>
+
+  </body>
+</html>
